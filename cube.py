@@ -5,25 +5,25 @@ import random
 
 class Cube():
     #testy
-    def __init__(self,create_cube) -> None:
+    def __init__(self,config,create_cube) -> None:
 
         if create_cube:
             self.cube = self.get_solved_cube()
 
         # get from config
-        self.size = 3
+        self.rubiks_dim = config["rubiks_dim"]
+        self.num_moves_scramble = config["num_moves_scramble"]
 
-        self.core_moves = ["side1_vertical_up",\
-                           "side1_vertical_down",\
-                           "side1_horizontal_left",\
-                           "side1_horizontal_right",\
-                           "side2_vertical_up",\
-                           "side1_vertical_down"]
-
-        
+        self.core_moves = {1:{"Side":1,"Orientation":"Vertical","Direction":"Up"},\
+            2:{"Side":1,"Orientation":"Vertical","Direction":"Down"},\
+                3:{"Side":1,"Orientation":"Horizontal","Direction":"Left"},\
+                    4:{"Side":1,"Orientation":"Horizontal","Direction":"Right"},\
+                        5:{"Side":2,"Orientation":"Vertical","Direction":"Up"},\
+                            6:{"Side":2,"Orientation":"Vertical","Direction":"Down"}}
 
         print(self.cube)
-        self.horizontal_twist_test()
+        self.horizontal_right(0,1)
+        print(self.cube)
 
         self.colour_map = {"R":1,"Y":2,"O":3,"W":4,"B":5,"G":6} 
 
@@ -38,16 +38,13 @@ class Cube():
                 [[2,2,2],[2,2,2],[2,2,2]],\
                 [[3,3,3],[3,3,3],[3,3,3]],\
                 [[4,4,4],[4,4,4],[4,4,4]],\
-                [[5,5,5],[5,5,5],[5,5,5]],\
+                [[5,5,5],[5,5,5],[5,5,6]],\
                 [[6,6,6],[6,6,6],[6,6,6]]])
 
 
         return cube
 
-    def horizontal_twist_test(self) -> None:
-        
-        #pass this in
-        row = 1
+    def horizontal_left(self,row,side) -> None:
 
         # this doesnt feel like the best way to do it (try in place again)
         cube = self.cube.copy()
@@ -56,10 +53,29 @@ class Cube():
         self.cube = cube  
 
         if row == 0:
+            self.cube[4] = np.rot90(self.cube[4],axes=(1,0))
+        elif row == self.rubiks_dim - 1:
             self.cube[5] = np.rot90(self.cube[5])
-        elif row == self.size - 1:
-            self.cube[6] = np.rot90(self.cube[6])
-        print(self.cube)
+
+        pass
+
+    def horizontal_right(self,row,side) -> None:
+
+        # this doesnt feel like the best way to do it (try in place again)
+        cube = self.cube.copy()
+        cube[0][row], cube[1][row], cube[2][row], cube[3][row] = \
+             self.cube[3][row], self.cube[0][row],self.cube[1][row],self.cube[2][row]
+        self.cube = cube  
+
+        if row == 0:
+            self.cube[4] = np.rot90(self.cube[4])
+        elif row == self.rubiks_dim - 1:
+            self.cube[5] = np.rot90(self.cube[5],axes=(1,0))
+
+        pass
+
+    def vertical_up(self,col,side) -> None:
+
         pass
 
     def move(self,row_col,core_move) -> None:
@@ -76,19 +92,26 @@ class Cube():
         # N for the row/column
 
         row_col = randint(0,self.size)
-        core_move = random.choice(self.core_moves)
+        core_move = random.choice(list(self.core_moves.values()))
         self.move(row_col,core_move)
 
     def is_valid_cube(self) -> bool:
         pass
 
-    def get_sides(self) -> int:
+    def get_sides(self) -> list[list[int]]:
         pass
 
     def is_solved(self) -> bool:
         pass
 
     def scramble(self) -> None:
+
+        # perform a set number of random moves to 
+        # randomise the cube 
+
+        for _ in self.num_moves_scramble:
+            self.random_move()
+
         pass
 
     def draw(self) -> None:

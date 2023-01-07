@@ -2,7 +2,7 @@ import argparse
 from cube import Cube
 
 def train_dqn(config):
-    cube = Cube(create_cube=True)
+    cube = Cube(config,create_cube=True)
 
     pass
 
@@ -22,7 +22,7 @@ def get_args() -> dict:
     parser = argparse.ArgumentParser(description='Rubiks Cube RL')
 
     # rubiks cube parameters
-    parser.add_argument("--num_sides", type=int, help="Number of sides of the Rubiks Cube", default=3)
+    parser.add_argument("--rubiks_dim", type=int, help="Dimension of side of cube", default=3)
     parser.add_argument("--num_moves_scramble", type=int, help="Number of moves to scramble the cube", default=2)
 
     # experiment details 
