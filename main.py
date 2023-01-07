@@ -1,12 +1,21 @@
 import argparse
 from cube import Cube
 
+def train_dqn(config):
+    cube = Cube(create_cube=True)
+
+    pass
+
+def train_actor_critic(config):
+    # to do 
+    pass
 
 def main(params):
-    print("Hello")
-    cube = Cube(create_cube=True)
-    print("Cube created")
-
+    
+    if params["rl_method"] == "DQN":
+        train_dqn(params)
+    elif params["rl_method"] == "Actor Critic":
+        train_actor_critic(params)
     pass
 
 def get_args() -> dict:
@@ -15,6 +24,9 @@ def get_args() -> dict:
     # rubiks cube parameters
     parser.add_argument("--num_sides", type=int, help="Number of sides of the Rubiks Cube", default=3)
     parser.add_argument("--num_moves_scramble", type=int, help="Number of moves to scramble the cube", default=2)
+
+    # experiment details 
+    parser.add_argument("--rl_method", type=str, help="RL method", default="DQN")
 
     args = parser.parse_args()
 
