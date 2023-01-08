@@ -22,7 +22,7 @@ class Cube():
                             6:{"Side":2,"Orientation":"Vertical","Direction":"Down"}}
 
         print(self.cube)
-        self.horizontal_right(0,1)
+        self.scramble()
         print(self.cube)
 
         self.colour_map = {"R":1,"Y":2,"O":3,"W":4,"B":5,"G":6} 
@@ -38,7 +38,7 @@ class Cube():
                 [[2,2,2],[2,2,2],[2,2,2]],\
                 [[3,3,3],[3,3,3],[3,3,3]],\
                 [[4,4,4],[4,4,4],[4,4,4]],\
-                [[5,5,5],[5,5,5],[5,5,6]],\
+                [[5,5,5],[5,5,5],[5,5,5]],\
                 [[6,6,6],[6,6,6],[6,6,6]]])
 
 
@@ -76,9 +76,47 @@ class Cube():
 
     def vertical_up(self,col,side) -> None:
 
+        #side will prob be most complicated here
+
+        if side == 1:
+            cube = self.cube.copy()
+            cube[0][:,col], cube[4][:,col], cube[2][:,(self.rubiks_dim - 1) - col], cube[5][:,col] = \
+                self.cube[5][:,col], self.cube[0][:,col], self.cube[4][:,col], self.cube[2][:,(self.rubiks_dim - 1) - col]
+            self.cube = cube 
+            if col == 0:
+                self.cube[3] = np.rot90(self.cube[3])
+            elif col == self.rubiks_dim - 1:
+                self.cube[1] = np.rot90(self.cube[1],axes=(1,0))
+        elif side == 2:
+            cube = self.cube.copy()
+            cube[1][:,col], cube[4][self.rubiks_dim -1 - col], cube[3][:,(self.rubiks_dim - 1) - col], cube[5][col] = \
+                self.cube[5][col], self.cube[1][:,col], self.cube[4][self.rubiks_dim - 1 - col], self.cube[3][:,(self.rubiks_dim - 1) - col]
+            self.cube = cube 
+            if col == 0:
+                self.cube[0] = np.rot90(self.cube[0])
+            elif col == self.rubiks_dim - 1:
+                self.cube[2] = np.rot90(self.cube[2],axes=(1,0))
+
+
+        pass
+
+    def vertical_down(self,col,side) -> None:
+
         pass
 
     def move(self,row_col,core_move) -> None:
+
+        if core_move["Orientation"] == "Horizontal" and core_move["Direction"] == "Left":
+            self.horizontal_left(row_col,core_move["Side"])
+        elif core_move["Orientation"] == "Horizontal" and core_move["Direction"] == "Right":
+            self.horizontal_right(row_col,core_move["Side"])
+        elif core_move["Orientation"] == "Vertical" and core_move["Direction"] == "Up":
+            self.vertical_up(row_col,core_move["Side"])
+        elif core_move["Orientation"] == "Vertical" and core_move["Direction"] == "Down":
+            self.vertical_down(row_col,core_move["Side"])
+        else:
+            print("Move not found")
+
 
         # rowcol
         # rotation
@@ -91,8 +129,10 @@ class Cube():
         # there is 6xN different moves
         # N for the row/column
 
-        row_col = randint(0,self.size)
+        row_col = randint(0,self.rubiks_dim-1)
         core_move = random.choice(list(self.core_moves.values()))
+        # format better
+        print("Random move: RowCol " + str(row_col) + " Core Move " + str(core_move))
         self.move(row_col,core_move)
 
     def is_valid_cube(self) -> bool:
@@ -109,7 +149,7 @@ class Cube():
         # perform a set number of random moves to 
         # randomise the cube 
 
-        for _ in self.num_moves_scramble:
+        for _ in range(self.num_moves_scramble):
             self.random_move()
 
         pass
