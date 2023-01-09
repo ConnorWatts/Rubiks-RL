@@ -23,7 +23,7 @@ def get_args() -> dict:
 
     # rubiks cube parameters
     parser.add_argument("--rubiks_dim", type=int, help="Dimension of side of cube", default=3)
-    parser.add_argument("--num_moves_scramble", type=int, help="Number of moves to scramble the cube", default=2)
+    parser.add_argument("--num_moves_scramble", type=int, help="Number of moves to scramble the cube", default=4)
 
     # experiment details 
     parser.add_argument("--rl_method", type=str, help="RL method", default="DQN")
