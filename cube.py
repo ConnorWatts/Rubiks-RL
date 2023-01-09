@@ -23,9 +23,10 @@ class Cube():
 
         print(self.cube)
         self.scramble()
-        print(self.cube)
+
 
         self.colour_map = {"R":1,"Y":2,"O":3,"W":4,"B":5,"G":6} 
+        online = {"W":1,"B":2,"Y":3,"G":4,"O":5,"R":6} 
 
         pass
 
@@ -81,7 +82,7 @@ class Cube():
         if side == 1:
             cube = self.cube.copy()
             cube[0][:,col], cube[4][:,col], cube[2][:,(self.rubiks_dim - 1) - col], cube[5][:,col] = \
-                self.cube[5][:,col], self.cube[0][:,col], self.cube[4][:,col], self.cube[2][:,(self.rubiks_dim - 1) - col]
+                self.cube[5][:,col], self.cube[0][:,col], self.cube[4][:,col].reverse(), self.cube[2][:,(self.rubiks_dim - 1) - col].reverse()
             self.cube = cube 
             if col == 0:
                 self.cube[3] = np.rot90(self.cube[3])
@@ -90,19 +91,36 @@ class Cube():
         elif side == 2:
             cube = self.cube.copy()
             cube[1][:,col], cube[4][self.rubiks_dim -1 - col], cube[3][:,(self.rubiks_dim - 1) - col], cube[5][col] = \
-                self.cube[5][col], self.cube[1][:,col], self.cube[4][self.rubiks_dim - 1 - col], self.cube[3][:,(self.rubiks_dim - 1) - col]
+                self.cube[5][col].reverse(), self.cube[1][:,col], self.cube[4][self.rubiks_dim - 1 - col], self.cube[3][:,(self.rubiks_dim - 1) - col]
             self.cube = cube 
             if col == 0:
                 self.cube[0] = np.rot90(self.cube[0])
             elif col == self.rubiks_dim - 1:
                 self.cube[2] = np.rot90(self.cube[2],axes=(1,0))
 
-
-        pass
-
     def vertical_down(self,col,side) -> None:
 
-        pass
+        #side will prob be most complicated here
+        cube = self.cube.copy()
+            
+        if side == 1:
+            cube[0][:,col], cube[4][:,col], cube[2][:,(self.rubiks_dim - 1) - col], cube[5][:,col] = \
+                self.cube[4][:,col], self.cube[2][:,(self.rubiks_dim - 1) - col].reverse(), self.cube[5][:,col].reverse(),self.cube[0][:,col]
+            self.cube = cube 
+            if col == 0:
+                self.cube[3] = np.rot90(self.cube[3],axes=(1,0))
+            elif col == self.rubiks_dim - 1:
+                self.cube[1] = np.rot90(self.cube[1])
+        elif side == 2:
+            cube[1][:,col], cube[4][self.rubiks_dim -1 - col], cube[3][:,(self.rubiks_dim - 1) - col], cube[5][col] = \
+                self.cube[4][self.rubiks_dim - 1 - col], self.cube[3][:,(self.rubiks_dim - 1) - col],self.cube[5][col], self.cube[1][:,col]
+            self.cube = cube 
+            if col == 0:
+                self.cube[0] = np.rot90(self.cube[0],axes=(1,0))
+            elif col == self.rubiks_dim - 1:
+                self.cube[2] = np.rot90(self.cube[2])
+
+
 
     def move(self,row_col,core_move) -> None:
 
@@ -116,11 +134,7 @@ class Cube():
             self.vertical_down(row_col,core_move["Side"])
         else:
             print("Move not found")
-
-
-        # rowcol
-        # rotation
-        # side
+        print(self.cube)
 
         pass
 
