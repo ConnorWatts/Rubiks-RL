@@ -1,8 +1,27 @@
 import argparse
 from cube import Cube
+from buffer import ReplayBuffer
+from actor import Actor
+from dqn import DQN
+import utils
 
 def train_dqn(config):
+
     cube = Cube(config,create_cube=True)
+
+    utils.set_random_seed(config)
+    schedule = utils.get_schedule(config)
+
+    replay_buffer = ReplayBuffer(config)
+
+    dqn = DQN(config)
+    target = DQN(config)
+
+    actor = Actor(config, replay_buffer, dqn, target)
+
+
+
+
 
     pass
 
