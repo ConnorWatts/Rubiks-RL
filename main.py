@@ -1,21 +1,22 @@
 import argparse
-from cube import Cube
 from buffer import ReplayBuffer
 from actor import Actor
-from dqn import DQN
+from qnetwork import QNetwork
 import utils
+#import gymnasium as gym
+import gym
+import gym_cube
 
 def train_dqn(config):
 
-    cube = Cube(config,create_cube=True)
-
+    env = gym.make('cube-v0')
     utils.set_random_seed(config)
     schedule = utils.get_schedule(config)
 
     replay_buffer = ReplayBuffer(config)
 
-    dqn = DQN(config)
-    target = DQN(config)
+    dqn = QNetwork(config)
+    target = QNetwork(config)
 
     actor = Actor(config, replay_buffer, dqn, target)
 
@@ -46,6 +47,8 @@ def get_args() -> dict:
 
     # experiment details 
     parser.add_argument("--rl_method", type=str, help="RL method", default="DQN")
+
+    parser.add_argument('--id', default='cube-v0', help="Environment ID",type=str)
 
     args = parser.parse_args()
 
