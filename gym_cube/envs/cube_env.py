@@ -52,6 +52,7 @@ class CubeEnv(gym.Env):
         self.cube = self._get_solved_cube(self.dim)
         for action in random.sample(range(0, self.num_unique_moves), self.num_moves_reset):
             self._move(action)
+        return self.cube
 
     def render(self, mode='human', close=False):
         ...
