@@ -6,13 +6,26 @@ class QNetwork(nn.Module):
     def __init__(self,config) -> None:
         super().__init__()
 
-        #self.conv_dim = config['conv_dim']
-        #self.emb_dim = config['emb_dim']
+        self.conv_dim = [12,24] #config['conv_dim']
+        self.emb_dim = 4 #config['emb_dim']
+
+        self.emb = nn.Embedding(12,4)
+
+        #if config['act_fnt'] == "ReLU":
+        self.act_fnt = nn.ReLU()
+
+        cnn_modules = []
+
+        #for i in range(len(self.conv_dim)-1):
+            #cnn_modules.append(nn.Conv3d())
+
+        #self.cnn_part = nn.Sequential(
+            #*cnn_modules,
+            #nn.Flatten()  
+        #)
 
         self.conv1 = nn.Conv3d(6,12,2)
-        # put relu in as well
         self.conv2 = nn.Conv3d(12,24,2)
-        self.emb = nn.Embedding(12,4)
         self.fc = nn.Linear(48,18)
 
 
@@ -21,14 +34,11 @@ class QNetwork(nn.Module):
 
         #make neater
 
-        test = torch.unsqueeze(state,4)
-        test = self.emb(test)
-        test = torch.squeeze(test)
-        test = self.conv1(test)
-        test = self.conv2(test)
-        test = torch.flatten(test,start_dim=1)
-        test = self.fc(test)
-        return test
+        unsqueeze_layer = torch.unsqueeze(state,4)
+        emb_layer = torch.squeeze(self.emb(unsqueeze_layer))
+        conv_layer1 = self.act_fnt(self.conv1(emb_layer))
+        conv_layer2 = self.act_fnt(self.conv2(conv_layer1))
+        return self.fc(torch.flatten(conv_layer2,start_dim=1))
 
 
 if __name__ == "__main__":

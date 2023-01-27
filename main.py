@@ -54,14 +54,24 @@ def get_args() -> dict:
     parser.add_argument("--rubiks_dim", type=int, help="Dimension of side of cube", default=3)
     parser.add_argument("--num_moves_scramble", type=int, help="Number of moves to scramble the cube", default=4)
 
-    # experiment details 
+    # experiment parameters
     parser.add_argument("--rl_method", type=str, help="RL method", default="DQN")
 
+    # environment parameters
     parser.add_argument('--id', default='cube-v0', help="Environment ID",type=str)
 
+    # training parameters
     parser.add_argument("--total_steps", type=int, help="Total number of collecting/learning steps", default=100000)
     parser.add_argument("--num_warmup_steps", type=int, help="Total number of warm up steps before learning", default=30000)
     parser.add_argument("--collection_ratio", type=int, help="Number of steps of collection per single learn", default=4)
+
+    # network parameters
+    parser.add_argument("--conv_dim", type=int, help="Dimension of Conv3d layers DQN", default=[12,24])
+    parser.add_argument("--emb_dim", type=int, help="Dimension of Embeddings DQN", default=4)
+    parser.add_argument("--act_fnt", type=str, help="Activation function DQN", default="ReLU")
+
+
+
 
     args = parser.parse_args()
 
