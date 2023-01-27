@@ -1,7 +1,7 @@
 import argparse
 from buffer import ReplayBuffer
 from actor import Actor
-from qnetwork import QNetwork
+from models.qnetwork import QNetwork
 import utils
 #import gymnasium as gym
 import gym
@@ -30,6 +30,8 @@ def train_dqn(config):
 
         if step > config['num_warmup_steps']:
             actor.learn_from_experience()
+
+        actor.step_count += 1
 
 
 

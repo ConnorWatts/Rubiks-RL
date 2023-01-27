@@ -16,6 +16,7 @@ class CubeEnv(gym.Env):
         self.cube = self._get_solved_cube(self.dim)
         self.num_moves_reset = 3
         self.num_unique_moves = 18
+        # should total step counts be in here
 
         self.done = False
         self.reward = 0.0
@@ -36,10 +37,10 @@ class CubeEnv(gym.Env):
 
     def step(self, action:int)-> Tuple[np.ndarray, float, bool, dict]:
 
-        if self.done:
-            self.reset()
-            self.observation = self._get_observation()
-            return self.observation, self.reward, self.done, {}
+        #if self.done:
+            #self.reset()
+            #self.observation = self._get_observation()
+            #return self.observation, self.reward, self.done, {}
 
         self._move(action)
         self.reward = self._get_reward()
@@ -49,6 +50,7 @@ class CubeEnv(gym.Env):
     def reset(self):
 
         self.reward = 0.0
+        self.done = False
         self.cube = self._get_solved_cube(self.dim)
         for action in random.sample(range(0, self.num_unique_moves), self.num_moves_reset):
             self._move(action)
