@@ -52,7 +52,7 @@ class Actor:
 
     def learn_from_experience(self) -> None:
 
-        current_states, actions, rewards, next_states, dones = self.replay_buffer.sample(self.batch_size)
+        current_states, next_states, actions, rewards, dones = self.replay_buffer.sample(self.batch_size)
 
         with torch.no_grad():
 

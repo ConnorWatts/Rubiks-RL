@@ -51,6 +51,9 @@ def get_args() -> dict:
     # environment parameters
     parser.add_argument('--id', default='cube-v0', help="Environment ID",type=str)
 
+    # replay buffer parameter
+    parser.add_argument("--max_buffer_size", type=int, help="Maximum size of buffer", default=75000)
+
     # training parameters
     parser.add_argument("--total_steps", type=int, help="Total number of collecting/learning steps", default=100000)
     parser.add_argument("--num_warmup_steps", type=int, help="Total number of warm up steps before learning", default=1000)
@@ -59,7 +62,6 @@ def get_args() -> dict:
     parser.add_argument("--gamma", type=float, help="Gamma discount value", default=0.9)
     parser.add_argument("--tau", type=float, help="Tau value", default=0.9)
     parser.add_argument("--target_dqn_update_interval", type=int, help="Learning steps to update target netork",default=4)
-
 
     # network parameters
     parser.add_argument("--conv_dim", type=int, help="Dimension of Conv3d layers DQN", default=[12,24])
