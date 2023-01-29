@@ -35,7 +35,7 @@ class QNetwork(nn.Module):
         #make neater
 
         unsqueeze_layer = torch.unsqueeze(state,4)
-        emb_layer = torch.squeeze(self.emb(unsqueeze_layer))
+        emb_layer = torch.squeeze(self.emb(unsqueeze_layer),4)
         conv_layer1 = self.act_fnt(self.conv1(emb_layer))
         conv_layer2 = self.act_fnt(self.conv2(conv_layer1))
         return self.fc(torch.flatten(conv_layer2,start_dim=1))
@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     config = {}
 
-    cube = torch.Tensor([cube for _ in range(32)]).to(torch.int64)
+    cube = torch.LongTensor([cube for _ in range(32)])#.to(torch.int64)
 
     net = QNetwork(config)
     out = net(cube)

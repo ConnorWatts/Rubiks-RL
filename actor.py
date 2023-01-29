@@ -52,7 +52,7 @@ class Actor:
 
     def learn_from_experience(self) -> None:
 
-        current_states, actions, rewards, next_states, dones = self.replay_buffer.sample_states(self.batch_size)
+        current_states, actions, rewards, next_states, dones = self.replay_buffer.sample(self.batch_size)
 
         with torch.no_grad():
 
@@ -91,8 +91,9 @@ class Actor:
                 if random.random() < epsilon:
                     action = self.env.action_space.sample()  
                 else:
-                    q_values = self.q_net(torch.unsqueeze(torch.Tensor(state).to(torch.int64),0))
-                    action = torch.argmax(q_values, dim=1).cpu().numpy()
+
+                    q_values = self.q_net(torch.unsqueeze(torch.LongTensor(state),0))
+                    action = torch.argmax(q_values, dim=1).item()
 
         return action
 
