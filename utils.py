@@ -7,3 +7,6 @@ def get_optimizer(network,config):
 
 def set_random_seed(config):
     ...
+
+def get_loss(config):
+    ...

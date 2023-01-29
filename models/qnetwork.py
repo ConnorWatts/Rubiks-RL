@@ -14,7 +14,7 @@ class QNetwork(nn.Module):
         #if config['act_fnt'] == "ReLU":
         self.act_fnt = nn.ReLU()
 
-        cnn_modules = []
+        #cnn_modules = []
 
         #for i in range(len(self.conv_dim)-1):
             #cnn_modules.append(nn.Conv3d())
@@ -58,6 +58,7 @@ if __name__ == "__main__":
 
     net = QNetwork(config)
     out = net(cube)
+    max = out.max(dim=1)[0]
     print('done')
 
 

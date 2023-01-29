@@ -35,7 +35,7 @@ class CubeEnv(gym.Env):
         # would this be true for impossible combinations
         self.observation_space = spaces.MultiDiscrete([[5,5,5] for _ in range(6)])
 
-    def step(self, action:int)-> Tuple[np.ndarray, float, bool, dict]:
+    def step(self, action:int)-> Tuple[np.ndarray, float, bool,bool,dict,]:
 
         #if self.done:
             #self.reset()
@@ -45,9 +45,9 @@ class CubeEnv(gym.Env):
         self._move(action)
         self.reward = self._get_reward()
         self.observation = self._get_observation()
-        return self.observation, self.reward, self.done, {}
+        return self.observation, self.reward, self.done, self.done,{}
 
-    def reset(self):
+    def reset(self) -> Tuple[np.ndarray]:
 
         self.reward = 0.0
         self.done = False
@@ -105,8 +105,8 @@ class CubeEnv(gym.Env):
                 self.cube[1] = np.rot90(self.cube[1],axes=(1,0))
         elif side == 2:
             cube = self.cube.copy()
-            cube[1][:,col], cube[4][self.dim -1 - col], cube[3][:,(self.dim - 1) - col], cube[5][col] = \
-                self.cube[5][col].reverse(), self.cube[1][:,col], self.cube[4][self.dim - 1 - col], self.cube[3][:,(self.dim - 1) - col]
+            cube[1][:,col][:], cube[4][self.dim -1 - col], cube[3][:,(self.dim - 1) - col], cube[5][col] = \
+                self.cube[5][col][::-1], self.cube[1][:,col], self.cube[4][self.dim - 1 - col], self.cube[3][:,(self.dim - 1) - col]
             self.cube = cube 
             if col == 0:
                 self.cube[0] = np.rot90(self.cube[0])
