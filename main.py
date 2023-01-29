@@ -68,9 +68,6 @@ def get_args() -> dict:
     parser.add_argument("--emb_dim", type=int, help="Dimension of Embeddings DQN", default=4)
     parser.add_argument("--act_fnt", type=str, help="Activation function DQN", default="ReLU")
 
-
-
-
     args = parser.parse_args()
 
     # Wrapping training configuration into a dictionary

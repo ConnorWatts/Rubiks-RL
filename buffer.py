@@ -29,12 +29,15 @@ class ReplayBuffer:
         # find the set of possible samples (exclude current)
         idx_set  = set(range(buffer_size)) - set([self.buffer_idx % self.max_buffer_size])
         rand_idx = random.sample(list(idx_set), batch_size)
+        rand_idx_next = [ (i+1) % self.max_buffer_size for i in rand_idx]
 
-        states = torch.tensor(np.concatenate([self.state_buffer[i] for i in rand_idx],0))
-        next_states = torch.tensor(np.concatenate([self.state_buffer[i+1 % self.max_buffer_size] for i in rand_idx],0))
+        # get values
+        states = torch.tensor(self.state_buffer[rand_idx]).long()
+        next_states = torch.tensor(self.state_buffer[rand_idx_next]).long()
         action = torch.tensor(self.action_buffer[rand_idx])
         reward = torch.tensor(self.reward_buffer[rand_idx])
         done = torch.tensor(self.done_buffer[rand_idx])
+
         return states, next_states, action, reward, done
 
     def store_transition(self, state, next_state, action, reward, done) -> None:
