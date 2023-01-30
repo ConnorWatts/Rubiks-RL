@@ -34,9 +34,9 @@ class ReplayBuffer:
         # get values
         states = torch.tensor(self.state_buffer[rand_idx]).long()
         next_states = torch.tensor(self.state_buffer[rand_idx_next]).long()
-        action = torch.tensor(self.action_buffer[rand_idx])
-        reward = torch.tensor(self.reward_buffer[rand_idx])
-        done = torch.tensor(self.done_buffer[rand_idx])
+        action = torch.tensor(self.action_buffer[rand_idx]).type(torch.int64) 
+        reward = torch.tensor(self.reward_buffer[rand_idx]).float()
+        done = torch.tensor(self.done_buffer[rand_idx]).float()
 
         return states, next_states, action, reward, done
 
@@ -47,7 +47,3 @@ class ReplayBuffer:
         self.reward_buffer[store_idx] = reward
         self.done_buffer[store_idx] = done
         self.buffer_idx += 1
-
-    def prune(self) -> None:
-        # delete early entries of the buffer
-        ...

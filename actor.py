@@ -60,7 +60,7 @@ class Actor:
             next_states_max_q_val = self.target_q_net(next_states).max(dim=1)[0]
             target_q_values = rewards + (1 - dones) * self.gamma * next_states_max_q_val
         
-        current_q_values = self.q_network(current_states).gather(dim=1, index=actions)
+        current_q_values = self.q_net(current_states).gather(dim=1, index=torch.unsqueeze(actions,0))[0]
         loss = self.loss_ft(target_q_values, current_q_values)
         self.loss.append(loss)
 

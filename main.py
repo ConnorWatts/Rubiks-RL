@@ -11,7 +11,7 @@ import gym_cube
 def train_dqn(config):
 
     env = gym.make('cube-v0')
-    utils.set_random_seed(config)
+    utils.set_random_seed(env,config)
 
     actor = Actor(config, env)
 
@@ -62,6 +62,13 @@ def get_args() -> dict:
     parser.add_argument("--gamma", type=float, help="Gamma discount value", default=0.9)
     parser.add_argument("--tau", type=float, help="Tau value", default=0.9)
     parser.add_argument("--target_dqn_update_interval", type=int, help="Learning steps to update target netork",default=4)
+    parser.add_argument("--seed", type=int, help="Seed of random", default= 4)
+    parser.add_argument("--loss", type=str, help="Loss function", default= "mse")
+    parser.add_argument("--epsilon_schedule", type=str, help="Epsilon Schedule", default= "linear")
+    parser.add_argument("--start_epsilon", type=float, help="Starting epsilon value", default=0.1)
+    parser.add_argument("--end_epsilon", type=float, help="Ending epsilon value", default=0.05)
+    parser.add_argument("--optimizer", type=str, help="Optimizer scheme", default= "adam")
+    parser.add_argument("--adam_learning_rate", type=float, help="Learn rate for ADAM optimizer",  default=1e-4)
 
     # network parameters
     parser.add_argument("--conv_dim", type=int, help="Dimension of Conv3d layers DQN", default=[12,24])

@@ -35,7 +35,7 @@ class CubeEnv(gym.Env):
         # would this be true for impossible combinations
         self.observation_space = spaces.MultiDiscrete([[5,5,5] for _ in range(6)])
 
-    def step(self, action:int)-> Tuple[np.ndarray, float, bool,bool,dict,]:
+    def step(self, action:int)-> Tuple[np.ndarray, float, bool, bool, dict]:
 
         #if self.done:
             #self.reset()
@@ -87,8 +87,6 @@ class CubeEnv(gym.Env):
             self.cube[4] = np.rot90(self.cube[4])
         elif row == self.dim - 1:
             self.cube[5] = np.rot90(self.cube[5],axes=(1,0))
-
-        pass
 
     def vertical_up(self,col,side) -> None:
 
