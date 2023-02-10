@@ -7,21 +7,31 @@ from gym.utils import seeding
 
 class CubeEnv(gym.Env):
 
-    #metadata = {'render.modes': ['human']}
     id = 'cube-v0'
 
-    def __init__(self):
+    def __init__(self, dim: int, num_moves_reset: int):
 
-        self.dim = 3 # allow this to be variable
+        """
+        Constructs the environment for the Rubiks Cube.
+        
+        :param dim: int denoting the dimension of the rubiks cube
+        :param num_moves_reset: int denoting the number of moves to randomly scramble
+            the rubik's cube
+        
+        """
+
+        self.dim = dim
         self.cube = self._get_solved_cube(self.dim)
-        self.num_moves_reset = 3
-        self.num_unique_moves = 18
+        self.num_moves_reset = num_moves_reset
+        self.num_unique_moves = self.dim * 6
         # should total step counts be in here
 
         self.done = False
         self.reward = 0.0
+        self.rewards = []
+        self.cum_reward = 0.0
 
-        # check indexing is correct
+        ## core moves ##
         self.core_moves = {0:{"Side":1,"Orientation":"Vertical","Direction":"Up"},\
             1:{"Side":1,"Orientation":"Vertical","Direction":"Down"},\
                 2:{"Side":1,"Orientation":"Horizontal","Direction":"Left"},\
@@ -29,26 +39,41 @@ class CubeEnv(gym.Env):
                         4:{"Side":2,"Orientation":"Vertical","Direction":"Up"},\
                             5:{"Side":2,"Orientation":"Vertical","Direction":"Down"}}
 
-        # get this from input
+        # gym parameters #
         self.action_space = spaces.Discrete(self.num_unique_moves)
-
-        # would this be true for impossible combinations
         self.observation_space = spaces.MultiDiscrete([[5,5,5] for _ in range(6)])
 
     def step(self, action:int)-> Tuple[np.ndarray, float, bool, bool, dict]:
 
-        #if self.done:
-            #self.reset()
-            #self.observation = self._get_observation()
-            #return self.observation, self.reward, self.done, {}
+        """"
+        Given an action perform one step on the environment( One turn of cube)
 
+        :param action: int index of move/turn 
+
+        :return observation : np.ndarray denoting state of cube after move
+        :return reward : float denoting the reward given from the action
+        :return done : bool denoting whether the episode is done and the cube is solved
+
+        """
         self._move(action)
         self.reward = self._get_reward()
+        self.cum_reward += self.reward
+        self.done = self._is_solved()
+
+        if self.done:
+            self.rewards.append(self.cum_reward)
+            self.cum_reward = 0.0
+
         self.observation = self._get_observation()
         return self.observation, self.reward, self.done, self.done,{}
 
     def reset(self) -> Tuple[np.ndarray]:
+        """
+        Reset the current cube to a random cube. Additionally resets done/rewards
+        flag/count. 
 
+        :return cube: np.ndarray denoting the reset cube
+        """
         self.reward = 0.0
         self.done = False
         self.cube = self._get_solved_cube(self.dim)
@@ -56,14 +81,13 @@ class CubeEnv(gym.Env):
             self._move(action)
         return self.cube
 
-    def render(self, mode='human', close=False):
+    def render(self):
         ...
 
-    ### move methods ###
+    ######## move methods ########
 
     def horizontal_left(self,row,side) -> None:
 
-        # this doesnt feel like the best way to do it (try in place again)
         cube = self.cube.copy()
         cube[0][row], cube[1][row], cube[2][row], cube[3][row] = \
              self.cube[1][row], self.cube[2][row],self.cube[3][row],self.cube[0][row]
@@ -77,7 +101,6 @@ class CubeEnv(gym.Env):
 
     def horizontal_right(self,row,side) -> None:
 
-        # this doesnt feel like the best way to do it (try in place again)
         cube = self.cube.copy()
         cube[0][row], cube[1][row], cube[2][row], cube[3][row] = \
              self.cube[3][row], self.cube[0][row],self.cube[1][row],self.cube[2][row]
@@ -89,8 +112,6 @@ class CubeEnv(gym.Env):
             self.cube[5] = np.rot90(self.cube[5],axes=(1,0))
 
     def vertical_up(self,col,side) -> None:
-
-        #side will prob be most complicated here
 
         if side == 1:
             cube = self.cube.copy()
@@ -113,7 +134,6 @@ class CubeEnv(gym.Env):
 
     def vertical_down(self,col,side) -> None:
 
-        #side will prob be most complicated here
         cube = self.cube.copy()
             
         if side == 1:
@@ -136,10 +156,12 @@ class CubeEnv(gym.Env):
     
     def _move(self, action:int) -> None:
 
-        # there are N x 6 moves
-        # N for each row/col
-        # 6 for the "core moves"
-        # so use mod and div then
+        """
+        Perform one move on the current cube.
+
+        :param action: int denoting index of move to perform
+
+        """
 
         row_col = action%self.dim
         core_move_idx = action//self.dim
@@ -158,11 +180,10 @@ class CubeEnv(gym.Env):
             print("Move not found")
 
 
-    ### general methods ###
-
+    ######## general methods ########
 
     def _is_solved(self) -> bool:
-
+       
         for side in self.cube:
             if not np.all(side == side[0][0]):
                 return False
@@ -190,10 +211,9 @@ class CubeEnv(gym.Env):
 
         # basic reward system at first
         if self._is_solved():
-            self.done = True
-            return 1
-        else:
             return 0
+        else:
+            return -1
 
 
 if __name__ == "__main__":

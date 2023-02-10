@@ -4,7 +4,7 @@ class LinearSchedule:
         super().__init__()
         self.start_epsilon = config['start_epsilon']
         self.end_epsilon = config['end_epsilon']
-        self.total_steps = config['total_steps']
+        self.total_steps = config['total_train_steps']
         self.warm_up_steps = config['num_warmup_steps']
 
     def __call__(self, time_step: int) -> float:

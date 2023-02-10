@@ -5,6 +5,9 @@ import numpy as np
 import random
 
 def get_schedule(config):
+    """
+    Gets the schedule for epsilon value in e-greedy regime
+    """
 
     if config['epsilon_schedule'] == 'linear':
         return LinearSchedule(config)
@@ -14,6 +17,9 @@ def get_schedule(config):
         return ExponentialSchedule(config)
     
 def get_optimizer(network,config):
+    """
+    Gets the optimizer for the training of the agent
+    """
 
     if config['optimizer'] == 'adam':
         from torch.optim import Adam
@@ -22,7 +28,12 @@ def get_optimizer(network,config):
 
 def set_random_seed(env,config):
 
-    #from https://github.com/gordicaleksa/pytorch-learn-reinforcement-learning/blob/26dd439e73bb804b2065969caa5fa5429becfdd5/utils/utils.py
+    """
+    Sets the random seed for the experiment
+    """
+
+    #from https://github.com/gordicaleksa/pytorch-learn-reinforcement-lear \
+    # ning/blob/26dd439e73bb804b2065969caa5fa5429becfdd5/utils/utils.py
 
     seed = config['seed']
     if seed is not None:
@@ -40,6 +51,9 @@ def set_random_seed(env,config):
     ...
 
 def get_loss(config):
+    """
+    Gets the loss function for the experiment
+    """
 
     if config['loss'] == 'mse':
         loss = nn.MSELoss()
