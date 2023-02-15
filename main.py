@@ -20,6 +20,8 @@ def main(config) -> None:
     
     """
 
+    # TO DO: Experiment with gym.vector.SyncVectorEnv
+
     # create environment
     env = gym.make('cube-v0', **gym_utils.get_env_args(config['rubiks_dim'],config['num_moves_reset']))
 
@@ -61,11 +63,14 @@ def get_algo(config, env):
         return DQN(config, env)
 
     elif config["rl_method"] == "DDPG":
-        # TO DO:
-        ...
+        print("--Loading DDPG Agent--")
+        from algos.ddpg import DDPG
+        return DDPG(config, env)
+
     elif config["rl_method"] == "PPO":
-        # TO DO:
-        ...
+        print("--Loading PPO Agent--")
+        from algos.ppo import PPO
+        return PPO(config, env)
 
     else:
         raise NotImplementedError('RL method {} not recognised.'.format(config['rl_method']))
