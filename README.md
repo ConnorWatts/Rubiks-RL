@@ -4,7 +4,7 @@
 
 This repository contains a PyTorch implementation of a Rubiks Cube solver using from scratch [**DQN**](https://arxiv.org/abs/1312.5602), [**DDPG**](https://arxiv.org/abs/1509.02971) and [**PPO**](https://arxiv.org/abs/1707.06347) algorithms.
 
-![](https://github.com/ConnorWatts/Rubiks-RL/docs/Rubiks.gif)
+![](https://github.com/ConnorWatts/Rubiks-RL/blob/main/docs/Rubiks.gif)
 
 
 ## Results
